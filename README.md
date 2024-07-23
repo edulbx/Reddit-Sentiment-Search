@@ -1,4 +1,5 @@
 ## Reddit Text Classification with Machine Learning
+***There will be a portuguese and a english version - under review of code and documentation***
 
 This script utilizes machine learning techniques to classify Reddit posts into various subjects. It employs a comprehensive pipeline that encompasses data loading, pre-processing, model training, evaluation, and visualization. The script aims to demonstrate the effectiveness of different machine learning algorithms for text classification tasks.
 
