@@ -120,7 +120,7 @@ def preprocessing_pipeline():
     return pipeline
 
 
-    ## vectorizer e o decomposition explicação Processamento de linguaguem natual
+## vectorizer e o decomposition explicação Processamento de linguaguem natual
 ## o computador não entende texto só bits(passagem de corrente), tem que representar  texto de forma númerica, como uma tabela de frequencia:
 ## sentença/palavra | variável | resolver | de | problema | categórico
 ## 0                     1         0         1       1          0
@@ -142,7 +142,7 @@ def preprocessing_pipeline():
 ## 
 ## USO DO TRUNCATE SVD na decomposition:
 ## A matriz pode ficar muito grande, e teria a maldição de dimensionalidade. Quanto maior o número de dimensões mais dificil
-# para o algoritimo de ML. Cada operaçõa matematica que realizar vai consumir muito do computador então se aplica a redução da   
+## para o algoritimo de ML. Cada operaçõa matematica que realizar vai consumir muito do computador então se aplica a redução da   
 ## dimensionalidade. Que é uma etapa de preprocessasmento. O Truncate SVD é um algoritimo de aprendizagem não supervisionada
 ##  Dai se cria um novo problema que precisa ser explicado em relaç]ao as matrizes.
 ## Matriz esparsa - tem muitos espaços com valores iguais a 0, como na Matriz acima; Outra opção seria a matriz densa.
