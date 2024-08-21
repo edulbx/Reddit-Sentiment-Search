@@ -61,7 +61,7 @@ def load_data():
 
         # Print
         print(f"Número de posts do assunto r/{assunto}: {len(posts)}",
-              f"\nUm dos posts extraídos: {posts[0][:600]}...\n",
+                f"\nUm dos posts extraídos: {posts[0][:600]}...\n",
               "_" * 80 + '\n')
     return data, labels
         
@@ -78,9 +78,9 @@ def split_data():
 
     #spliting
     X_treino, X_teste, y_treino, y_teste = train_test_split(data, 
-                                                           labels, 
-                                                           test_size = TEST_SIZE, 
-                                                           random_state = RANDOM_STATE)
+                                                            labels, 
+                                                            test_size = TEST_SIZE, 
+                                                            random_state = RANDOM_STATE)
 
     print(f"{len(y_teste)} amostras de testes.")
 
