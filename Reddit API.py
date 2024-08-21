@@ -136,7 +136,7 @@ def preprocessing_pipeline():
 ## diferentes. Cada uma com sua importancia, e pode acontecer de elas terem o mesmo peso a depender do caso.
 ## A palavra CountVectorizer implementa tokenização e contagem de ocorrência. 
 ## Tokenização é separar um paragrafo em frases e frases em palavras - etapa de pre processamento
-## o TFIDFVectorizer combina todas as opções de CountVectorizer e TFIDFTransformer em um único modelo.
+## o TFIDFVectorizer combina todas as opções de CountVectorizer e TFIDFTransformer em um único model.
 ## Nós reponderamos vetores de recursos de contagem usando o método tf-idf e em seguida alimentamos os dados no classificador para uma melhor
 ## classificação. De outra forma as palavras comuns ocupariam muito espaço com pouca informação relevante sobre o texto.
 ## 
@@ -152,44 +152,44 @@ def preprocessing_pipeline():
 ## a matriz é esparsa. O PCA deixa a matriz mutio esparsa.
 
 
-## função para criar modelos
+## função para criar models
 #variaveis de controle: 
 N_NEIGHBORS = 4 
 CV = 3 #3 validações cruzadas
 
-#função cria modelos: 
-def cria_modelos():
+#função cria models: 
+def cria_models():
 
-    modelo_1 = KNeighborsClassifier(n_neighbors = N_NEIGHBORS)
-    modelo_2 = RandomForestClassifier(random_state = RANDOM_STATE)
-    modelo_3 = LogisticRegressionCV(cv = CV, random_state = RANDOM_STATE)
+    model_1 = KNeighborsClassifier(n_neighbors = N_NEIGHBORS)
+    model_2 = RandomForestClassifier(random_state = RANDOM_STATE)
+    model_3 = LogisticRegressionCV(cv = CV, random_state = RANDOM_STATE)
 
-    modelos = [("KNN", modelo_1), ("RandomForest", modelo_2), ("LogReg", modelo_3)]
+    models = [("KNN", model_1), ("RandomForest", model_2), ("LogReg", model_3)]
     
-    return modelos
+    return models
 
 # quando não se sabe previamente o melhor algoritmo tem que eexperiemntar algumas opções de algotirmos para sabe o ideal para determinado
 # conjunto de dados.
 # poderiam ser usados outros e para cada um dos algoritmos automatizar os hiperparametros.
 # usando 4 vizinhos mais proximos, para experimentar. Pode ir tesntando e usar outros hiperparamtros
 # usando 3 validações crizadas para o regresion CV.
-# acima são apenas algorimos não o modelo em si
+# acima são apenas algorimos não o model em si
 
 ## TREINAMENTO E AVALIAÇÃO: 
 
-#Função para trinamento e avaliação dos modelos
-def treina_avalia(modelos, pipeline, X_treino, X_teste, y_treino, y_teste):
+#Função para trinamento e avaliação dos models
+def treina_avalia(models, pipeline, X_treino, X_teste, y_treino, y_teste):
     
-    resultados = []
+    results = []
     
     # Loop
-    for name, modelo in modelos:
+    for name, model in models:
 
         # Pipeline
-        pipe = Pipeline(pipeline + [(name, modelo)])
+        pipe = Pipeline(pipeline + [(name, model)])
 
         # Treinamento
-        print(f"Treinando o modelo {name} com dados de treino...")
+        print(f"Treinando o model {name} com dados de treino...")
         pipe.fit(X_treino, y_treino)
 
         # Previsões com dados de teste
@@ -198,12 +198,15 @@ def treina_avalia(modelos, pipeline, X_treino, X_teste, y_treino, y_teste):
         # Calcula as métricas
         report = classification_report(y_teste, y_pred)
         print("Relatório de Classificação\n", report)
+        with open('relatorio_classificacao.txt', 'w') as f:
+                f.write(report)
+        print('Salvo no arquivo')
 
-        resultados.append([modelo, {'modelo': name, 'previsoes': y_pred, 'report': report,}])           
+        results.append([model, {'model': name, 'predictions': y_pred, 'report': report,}])           
 
-    return resultados
+    return results
 #até aqui concluídas as funções que vamos precisar. 
-#precisamos do bloco main, onde serão chamadas as funções e os resultados que foram criadas - herdado do C e C++.
+#precisamos do bloco main, onde serão chamadas as funções e os results que foram criadas - herdado do C e C++.
 
 #executando o pipeline de Machine Learning:
 
@@ -217,37 +220,43 @@ if __name__ == "__main__":
     #pipeline de pre-processamento: 
     pipeline = preprocessing_pipeline()
 
-    #cria os modelos
-    all_models = cria_modelos()
+    #cria os models
+    all_models = cria_models()
 
-    #treina e avalia os resultados
-    resultados = treina_avalia(all_models, pipeline, X_treino, X_teste, y_treino, y_teste)
+    #treina e avalia os results
+    results = treina_avalia(all_models, pipeline, X_treino, X_teste, y_treino, y_teste)
+    # with open('relatorio_classificacao.txt', 'w') as f:
+    #             f.write(results)
 
     print("Concluído com sucesso")
 
-## Visualizando os Resultados
+## Visualizando os results
 
 def plot_distribution():
     _, counts = np.unique(labels, return_counts = True)
     sns.set_theme(style = "whitegrid")
     plt.figure(figsize = (15, 6), dpi = 120)
-    plt.title("Número de Posts Por Assunto")
+    plt.title("Number of Posts Per Subject")
     sns.barplot(x = assuntos, y = counts)
     plt.legend([' '.join([f.title(),f"- {c} posts"]) for f,c in zip(assuntos, counts)])
     plt.show()
 
 def plot_confusion(result):
-    print("Relatório de Classificação\n", result[-1]['report'])
-    y_pred = result[-1]['previsoes']
+    print("Classification Report\n", result[-1]['report'])
+    y_pred = result[-1]['predictions']
     conf_matrix = confusion_matrix(y_teste, y_pred)
     _, test_counts = np.unique(y_teste, return_counts = True)
     conf_matrix_percent = conf_matrix / test_counts.transpose() * 100
     plt.figure(figsize = (9,8), dpi = 120)
-    plt.title(result[-1]['modelo'].upper() + " Resultados")
-    plt.xlabel("Valor Real")
-    plt.ylabel("Previsão do Modelo")
+    plt.title(result[-1]['model'].upper() + " Results")
+    plt.xlabel("Real Value")
+    plt.ylabel("Model predictions")
     ticklabels = [f"r/{sub}" for sub in assuntos]
-    sns.heatmap(data = conf_matrix_percent, xticklabels = ticklabels, yticklabels = ticklabels, annot = True, fmt = '.2f')
+    plt.xticks(rotation=45, ha='right')
+    sns.heatmap(data = conf_matrix_percent, xticklabels = ticklabels, yticklabels = ticklabels, annot = True, fmt = '.2f', cmap='viridis',
+                    cbar=True
+                                
+                )
     plt.show()
 
 
@@ -255,13 +264,13 @@ def plot_confusion(result):
 plot_distribution()
 
 # Resultado do KNN
-plot_confusion(resultados[0])
+plot_confusion(results[0])
 
 # Resultado do RandomForest
-plot_confusion(resultados[1])
+plot_confusion(results[1])
 
 # Resultado da Regressão Logística
-plot_confusion(resultados[2])
+plot_confusion(results[2])
 
 
 # Fim
